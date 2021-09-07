@@ -3,7 +3,7 @@ import java.awt.Graphics;
 public class Ball {
     static final int DIAMETER = 50;
 
-    private int x, y;
+    private long x, y;
 
     Vetor Direction = new Vetor();
     Vetor Velocity = new Vetor();
@@ -19,7 +19,7 @@ public class Ball {
     }
 
     public void paint(Graphics g) {
-        g.fillOval(getX(), getY(), DIAMETER, DIAMETER);
+        g.fillOval(Math.toIntExact(Math.round(getX())), Math.toIntExact(Math.round(getY())), DIAMETER, DIAMETER);
     }
 
     public void movement(Arena rinha) {
@@ -66,23 +66,19 @@ public class Ball {
         }
     }
 
-    int getDIAMETER() {
-        return DIAMETER;
-    }
-
-    public int getX() {
+    public long getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(long x) {
         this.x = x;
     }
 
-    public int getY() {
+    public long getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(long y) {
         this.y = y;
     }
 }

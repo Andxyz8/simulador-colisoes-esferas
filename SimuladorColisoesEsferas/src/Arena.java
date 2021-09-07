@@ -8,9 +8,16 @@ import javax.swing.Timer;
 
 public class Arena extends JPanel implements ActionListener {
     Random ran = new Random();
-    private int numBall;
     Timer timer = new Timer(10, this);
+    private int numBall;
     private ArrayList<Ball> Balls = new ArrayList<>();
+
+    public Arena() {
+    }
+
+    public Arena(int n) {
+        numBall = n;
+    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -26,11 +33,19 @@ public class Arena extends JPanel implements ActionListener {
         for (int i = 0; i < numBall; i++) {
             Ball ball = new Ball();
 
+            /*
+             * Faz com que a esfera não seja criada para fora dos limites da arena com
+             * relação à coordenada x de sua posição.
+             */
             x = ran.nextInt(this.getWidth());
             if (x > this.getWidth() - Ball.DIAMETER - 3) {
                 x = this.getWidth() - Ball.DIAMETER - 3;
             }
 
+            /*
+             * Faz com que a esfera não seja criada para fora dos limites da arena com
+             * relação à coordenada y de sua posição.
+             */
             y = ran.nextInt(this.getHeight());
             if (y > this.getHeight() - Ball.DIAMETER - 3) {
                 y = this.getHeight() - Ball.DIAMETER - 3;
@@ -38,8 +53,8 @@ public class Arena extends JPanel implements ActionListener {
 
             ball.setPosition(x, y);
 
-            x = ran.nextInt(2) + 1;
-            y = ran.nextInt(2) + 1;
+            x = ran.nextInt(20) + 1;
+            y = ran.nextInt(20) + 1;
 
             ball.setVelocity(x, y);
 
@@ -73,49 +88,77 @@ public class Arena extends JPanel implements ActionListener {
 
     private void collisionBetweenBalls(Ball B, int i) {
         int j = 0;
-        double dist;
-        // double cx, cy, c, pxb, pyb, pxB, pyB;
+        // long dist;
+        long cx, cy, c, pxb, pyb, pxB, pyB;
 
         for (Ball b : Balls) {
             if (i != j) {
-                dist = Math.sqrt(Math.pow(b.getX() - B.getX(), 2) + Math.pow(b.getY() - B.getY(), 2));
+                cx = b.getX() - B.getX();
+                cy = b.getY() - B.getY();
+                c = cx * cx + cy * cy;
+                // dist = (long) Math.sqrt(Math.pow(b.getX() - B.getX(), 2) + Math.pow(b.getY()
+                // - B.getY(), 2));
+                // B.getY(), 2));
 
-                if (dist <= B.getDIAMETER()) {
+                // Se a distância entre as esferas menor que o diâmetro, então há colisão!
+                if (c <= Ball.DIAMETER * Ball.DIAMETER) {
 
-                    /*
-                     * cx = b.getX() - B.getX(); cy = b.getY() - B.getY(); c = cx * cx + cy * cy;
-                     * 
-                     * pxb = ((b.Velocity.getX() * cx) + (b.Velocity.getY() * cy)) * cx / c; pyb =
-                     * ((b.Velocity.getX() * cx) + (b.Velocity.getY() * cy)) * cy / c; pxB =
-                     * ((B.Velocity.getX() * cx) + (B.Velocity.getY() * cy)) * cx / c; pyB =
-                     * ((B.Velocity.getX() * cx) + (B.Velocity.getY() * cy)) * cy / c;
-                     * 
-                     * b.Velocity.setX((int) (pxb - pxB)); b.Velocity.setY((int) (pyb - pyB));
-                     * B.Velocity.setX((int) (pxB - pxb)); B.Velocity.setY((int) (pxB - pxb));
-                     * 
-                     * if((pxb - pxB) > 0){ b.Direction.setX(1); } else{ b.Direction.setX(-1); }
-                     * 
-                     * if((pyb - pyB) > 0){ b.Direction.setY(1); } else{ b.Direction.setY(-1); }
-                     * 
-                     * if((pxB - pxb) > 0){ B.Direction.setX(1); } else{ B.Direction.setX(-1); }
-                     * 
-                     * if((pyB - pyb) > 0){ B.Direction.setY(1); } else{ B.Direction.setY(-1); }
-                     * 
-                     * System.out.println("bvX: " + b.Velocity.getX() + "pxb - pxB = " + (pxb -
-                     * pxB)); System.out.println("bvY: " + b.Velocity.getY() + "pyb - pyB = " + (pyb
-                     * - pyB)); System.out.println("BvX: " + b.Velocity.getX() + "pxB - pxb = " +
-                     * (pxB - pxb)); System.out.println("BvY: " + b.Velocity.getY() + "pyB - pyb = "
-                     * + (pyB - pyb));
-                     */
+                    pxb = ((b.Velocity.getX() * cx) + (b.Velocity.getY() * cy)) * cx / c;
+                    pyb = ((b.Velocity.getX() * cx) + (b.Velocity.getY() * cy)) * cy / c;
+                    pxB = ((B.Velocity.getX() * cx) + (B.Velocity.getY() * cy)) * cx / c;
+                    pyB = ((B.Velocity.getX() * cx) + (B.Velocity.getY() * cy)) * cy / c;
 
-                    b.Direction.setX((b.Direction.getX() * -1));
-                    b.Direction.setY((b.Direction.getY() * -1));
-                    B.Direction.setX((B.Direction.getX() * -1));
-                    B.Direction.setY((B.Direction.getY() * -1));
+                    System.out.println("Pos b x: " + b.getX() + "\tPos b y: " + b.getY());
+                    System.out.println("Pos B x: " + B.getX() + "\tPos B y: " + B.getY());
+
+                    System.out.println("Dir b x: " + b.Direction.getX() + "\tDir b y: " + b.Direction.getY());
+                    System.out.println("Dir B x: " + B.Direction.getX() + "\tDir B y: " + B.Direction.getY());
+
+                    System.out.println("Vel b x: " + b.Velocity.getX() + "\tVel b y: " + b.Velocity.getY());
+                    System.out.println("Vel B x: " + B.Velocity.getX() + "\tVel B y: " + B.Velocity.getY());
+
+                    System.out.println("\n\npxb - pxB: " + (pxb - pxB) + "\tpyb - pyB: " + (pyb - pyB));
+                    System.out.println("pxB - pxb: " + (pxB - pxb) + "\tpyB - pyb: " + (pyB - pyb));
+
+                    timer.stop();
+
+                    b.Velocity.setX((pxb - pxB));
+                    b.Velocity.setY((pyb - pyB));
+                    B.Velocity.setX((pxB - pxb));
+                    B.Velocity.setY((pyB - pyb));
+
+                    if ((pxb - pxB) > 0) {
+                        b.Direction.setX(1);
+                    } else {
+                        b.Direction.setX(-1);
+                    }
+
+                    if ((pyb - pyB) > 0) {
+                        b.Direction.setY(1);
+                    } else {
+                        b.Direction.setY(-1);
+                    }
+
+                    if ((pxB - pxb) > 0) {
+                        B.Direction.setX(1);
+                    } else {
+                        B.Direction.setX(-1);
+                    }
+
+                    if ((pyB - pyb) > 0) {
+                        B.Direction.setY(1);
+                    } else {
+                        B.Direction.setY(-1);
+                    }
+
+                    // b.Direction.setX((b.Direction.getX() * -1));
+                    // b.Direction.setY((b.Direction.getY() * -1));
+                    // B.Direction.setX((B.Direction.getX() * -1));
+                    // B.Direction.setY((B.Direction.getY() * -1));
 
                     b.changePosition();
                     B.changePosition();
-                    // timer.stop();
+                    timer.stop();
                 }
             }
             j++;
@@ -139,14 +182,16 @@ public class Arena extends JPanel implements ActionListener {
 
         ball.setPosition(x, y);
 
-        x = ran.nextInt(2) + 1;
-        y = ran.nextInt(2) + 1;
+        x = ran.nextInt(5) + 1;
+        y = ran.nextInt(5) + 1;
 
         ball.setVelocity(x, y);
 
         ball.setDirection(x, y);
 
         Balls.add(ball);
+
+        repaint();
     }
 
     public void remBall() {
@@ -155,6 +200,7 @@ public class Arena extends JPanel implements ActionListener {
         }
 
         Balls.remove(ran.nextInt(Balls.toArray().length));
+        repaint();
     }
 
     public void setNumBall(int n) {
