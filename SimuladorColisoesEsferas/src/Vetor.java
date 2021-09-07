@@ -1,7 +1,4 @@
-package colisor;
-
 public class Vetor {
-
     private int x;
     private int y;
 

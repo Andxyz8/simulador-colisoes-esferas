@@ -1,9 +1,6 @@
-package colisor;
-
 import java.awt.Graphics;
 
 public class Ball {
-
     static final int DIAMETER = 50;
 
     private int x, y;
@@ -54,7 +51,7 @@ public class Ball {
         setX(getX() + Velocity.getX() * Direction.getX());
         setY(getY() + Velocity.getY() * Direction.getY());
     }
-    
+
     public void setDirection(int a, int b) {
         if (a == 1) {
             Direction.setX(1);
@@ -88,5 +85,4 @@ public class Ball {
     public void setY(int y) {
         this.y = y;
     }
-
 }
