@@ -7,15 +7,20 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Arena extends JPanel implements ActionListener {
-    Random ran = new Random();
-    Timer timer = new Timer(10, this);
+    Random Random;
+    Timer Timer;
     private int numBall;
-    private ArrayList<Ball> Balls = new ArrayList<>();
+    private ArrayList<Ball> Balls;
 
     public Arena() {
+        Random = new Random();
+        Timer = new Timer(10, this);
+        Balls = new ArrayList<>();
+        numBall = 0;
     }
 
     public Arena(int n) {
+        this();
         numBall = n;
     }
 
@@ -35,26 +40,22 @@ public class Arena extends JPanel implements ActionListener {
 
             /*
              * Faz com que a esfera não seja criada para fora dos limites da arena com
-             * relação à coordenada x de sua posição.
+             * relação à coordenada x e abaixo à coordenada y de sua posição.
              */
-            x = ran.nextInt(this.getWidth());
+            x = Random.nextInt(this.getWidth());
             if (x > this.getWidth() - Ball.DIAMETER - 3) {
                 x = this.getWidth() - Ball.DIAMETER - 3;
             }
 
-            /*
-             * Faz com que a esfera não seja criada para fora dos limites da arena com
-             * relação à coordenada y de sua posição.
-             */
-            y = ran.nextInt(this.getHeight());
+            y = Random.nextInt(this.getHeight());
             if (y > this.getHeight() - Ball.DIAMETER - 3) {
                 y = this.getHeight() - Ball.DIAMETER - 3;
             }
 
             ball.setPosition(x, y);
 
-            x = ran.nextInt(20) + 1;
-            y = ran.nextInt(20) + 1;
+            x = Random.nextInt(20) + 1;
+            y = Random.nextInt(20) + 1;
 
             ball.setVelocity(x, y);
 
@@ -63,11 +64,11 @@ public class Arena extends JPanel implements ActionListener {
     }
 
     public void start() {
-        timer.start();
+        Timer.start();
     }
 
     public void stop() {
-        timer.stop();
+        Timer.stop();
     }
 
     @Override
@@ -86,31 +87,37 @@ public class Arena extends JPanel implements ActionListener {
     }
 
     private void collisionBetweenBalls(Ball B, int i) {
+        long collision, collisionX, collisionY, projXb, projYb, projXB, projYB;
         Ball b;
-        long cx, cy, c, pxb, pyb, pxB, pyB;
 
         for (int k = i + 1; k < Balls.size(); k++) {
             b = Balls.get(k);
-            cx = B.getX() - b.getX();
-            cy = B.getY() - b.getY();
-            c = cx * cx + cy * cy;
+            collisionX = B.getPosition().getX() - b.getPosition().getX();
+            collisionY = B.getPosition().getY() - b.getPosition().getY();
+            collision = collisionX * collisionX + collisionY * collisionY;
 
             // Se a distância entre as esferas for menor que o diâmetro, então há colisão!
-            if (c <= Ball.DIAMETER * Ball.DIAMETER) {
+            if (collision <= Ball.DIAMETER * Ball.DIAMETER) {
 
-                pxb = ((b.Velocity.getX() * cx) + (b.Velocity.getY() * cy)) * cx / c;
-                pyb = ((b.Velocity.getX() * cx) + (b.Velocity.getY() * cy)) * cy / c;
-                pxB = ((B.Velocity.getX() * cx) + (B.Velocity.getY() * cy)) * cx / c;
-                pyB = ((B.Velocity.getX() * cx) + (B.Velocity.getY() * cy)) * cy / c;
+                projXB = ((B.getVelocity().getX() * collisionX) + (B.getVelocity().getY() * collisionY)) * collisionX
+                        / collision;
+                projYB = ((B.getVelocity().getX() * collisionX) + (B.getVelocity().getY() * collisionY)) * collisionY
+                        / collision;
+                projXb = ((b.getVelocity().getX() * collisionX) + (b.getVelocity().getY() * collisionY)) * collisionX
+                        / collision;
+                projYb = ((b.getVelocity().getX() * collisionX) + (b.getVelocity().getY() * collisionY)) * collisionY
+                        / collision;
 
-                B.Velocity.setX(B.Velocity.getX() - (pxB - pxb));
-                B.Velocity.setY(B.Velocity.getY() - (pyB - pyb));
-                b.Velocity.setX(b.Velocity.getX() - (pxb - pxB));
-                b.Velocity.setY(b.Velocity.getY() - (pyb - pyB));
+                B.getVelocity().setX(B.getVelocity().getX() - (projXB - projXb));
+                B.getVelocity().setY(B.getVelocity().getY() - (projYB - projYb));
+                b.getVelocity().setX(b.getVelocity().getX() - (projXb - projXB));
+                b.getVelocity().setY(b.getVelocity().getY() - (projYb - projYB));
 
-                if (cx != 0 && cy != 0) {
-                    B.setPosition(B.getX() + cx / Math.abs(cx), B.getY() + cy / Math.abs(cy));
-                    b.setPosition(b.getX() - cx / Math.abs(cx), b.getY() - cy / Math.abs(cy));
+                if (collisionX != 0 && collisionY != 0) {
+                    B.setPosition(B.getPosition().getX() + collisionX / Math.abs(collisionX),
+                            B.getPosition().getY() + collisionY / Math.abs(collisionY));
+                    b.setPosition(b.getPosition().getX() - collisionX / Math.abs(collisionX),
+                            b.getPosition().getY() - collisionY / Math.abs(collisionY));
                 }
 
                 b.changePosition();
@@ -124,20 +131,20 @@ public class Arena extends JPanel implements ActionListener {
         int x, y;
         Ball ball = new Ball();
 
-        x = ran.nextInt(this.getWidth());
+        x = Random.nextInt(this.getWidth());
         if (x > this.getWidth() - Ball.DIAMETER - 3) {
             x = this.getWidth() - Ball.DIAMETER - 3;
         }
 
-        y = ran.nextInt(this.getHeight());
+        y = Random.nextInt(this.getHeight());
         if (y > this.getHeight() - Ball.DIAMETER - 3) {
             y = this.getHeight() - Ball.DIAMETER - 3;
         }
 
         ball.setPosition(x, y);
 
-        x = ran.nextInt(5) + 1;
-        y = ran.nextInt(5) + 1;
+        x = Random.nextInt(5) + 1;
+        y = Random.nextInt(5) + 1;
 
         ball.setVelocity(x, y);
 
@@ -151,7 +158,7 @@ public class Arena extends JPanel implements ActionListener {
             numBall--;
         }
 
-        Balls.remove(ran.nextInt(Balls.size()));
+        Balls.remove(Random.nextInt(Balls.size()));
         repaint();
     }
 

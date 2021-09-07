@@ -9,8 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class Collider extends JFrame {
-    static int n;
-
     // Declaração das variáveis
     private JButton jButton_AddBall;
     private JButton jButton_RemBall;
@@ -18,12 +16,18 @@ public class Collider extends JFrame {
     private JButton jButton_Stop;
     private JLabel jLabel_ArenaTitle;
     private JLabel jLabel_BallCount;
-    Arena Rinha;
+    private Arena Rinha;
+
+    public Collider() {
+
+    }
 
     public Collider(int w, int h, int n) {
+        Rinha = new Arena(n);
+        Rinha.setNumBall(n);
+
         initComponents();
 
-        Collider.n = n;
         this.setSize(w, h);
         this.setResizable(false);
 
@@ -38,7 +42,7 @@ public class Collider extends JFrame {
     }
 
     private void initComponents() {
-        Rinha = new Arena(Collider.n);
+        // Código gerado automaticamente pelo Netbeans.
         jButton_Start = new JButton();
         jButton_Stop = new JButton();
         jButton_RemBall = new JButton();
@@ -53,7 +57,6 @@ public class Collider extends JFrame {
         Rinha.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 153, 51), 3));
         Rinha.setName("Arena"); // NOI18N
         Rinha.setPreferredSize(new java.awt.Dimension(780, 342));
-        Rinha.setNumBall(n);
 
         GroupLayout jPanel_ArenaLayout = new GroupLayout(Rinha);
         Rinha.setLayout(jPanel_ArenaLayout);

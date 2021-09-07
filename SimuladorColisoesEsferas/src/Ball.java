@@ -3,65 +3,67 @@ import java.awt.Graphics;
 public class Ball {
     static final int DIAMETER = 25;
 
-    private long x, y;
+    private Vetor2D Position;
+    private Vetor2D Velocity;
 
-    Vetor Velocity = new Vetor();
-
-    public void setPosition(long x, long y) {
-        this.setX(x);
-        this.setY(y);
+    public Ball() {
+        Position = new Vetor2D();
+        Velocity = new Vetor2D();
     }
 
-    public void setVelocity(int x, int y) {
-        Velocity.setX(x);
-        Velocity.setY(y);
+    public Ball(long velocityX, long velocityY, long positionY, long positionX) {
+        this();
+        setPosition(positionX, positionY);
+        setVelocity(velocityX, velocityY);
     }
 
     public void paint(Graphics g) {
-        g.fillOval(Math.toIntExact(Math.round(getX())), Math.toIntExact(Math.round(getY())), DIAMETER, DIAMETER);
+        g.fillOval(Math.toIntExact(Position.getX()), Math.toIntExact(Position.getY()), DIAMETER, DIAMETER);
     }
 
     public void movement(Arena rinha) {
-        if (getX() >= rinha.getWidth() - DIAMETER) {
-            setX(rinha.getWidth() - DIAMETER);
+        if (Position.getX() >= rinha.getWidth() - DIAMETER) {
+            Position.setX(rinha.getWidth() - DIAMETER);
             Velocity.setX(Velocity.getX() * (-1));
         }
 
-        if (getX() <= 0) {
-            setX(0);
+        if (Position.getX() <= 0) {
+            Position.setX(0);
             Velocity.setX(Velocity.getX() * (-1));
         }
 
-        if (getY() >= rinha.getHeight() - DIAMETER) {
-            setY(rinha.getHeight() - DIAMETER);
+        if (Position.getY() >= rinha.getHeight() - DIAMETER) {
+            Position.setY(rinha.getHeight() - DIAMETER);
             Velocity.setY(Velocity.getY() * (-1));
         }
 
-        if (getY() <= 0) {
-            setY(0);
+        if (Position.getY() <= 0) {
+            Position.setY(0);
             Velocity.setY(Velocity.getY() * (-1));
         }
         changePosition();
     }
 
     public void changePosition() {
-        setX(getX() + Velocity.getX());
-        setY(getY() + Velocity.getY());
+        Position.setX(Position.getX() + Velocity.getX());
+        Position.setY(Position.getY() + Velocity.getY());
     }
 
-    public long getX() {
-        return x;
+    public void setPosition(long x, long y) {
+        Position.setX(x);
+        Position.setY(y);
     }
 
-    public void setX(long x) {
-        this.x = x;
+    public void setVelocity(long x, long y) {
+        Velocity.setX(x);
+        Velocity.setY(y);
     }
 
-    public long getY() {
-        return y;
+    public Vetor2D getPosition() {
+        return Position;
     }
 
-    public void setY(long y) {
-        this.y = y;
+    public Vetor2D getVelocity() {
+        return Velocity;
     }
 }
